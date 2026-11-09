@@ -1,4 +1,3 @@
-
 import os
 import random  
 from typing import List
@@ -9,7 +8,7 @@ from pydantic import BaseModel
 from dotenv import load_dotenv
 from google import genai
 from google.genai import types
-
+from booking.booking_routes import router as booking_router
 # Add this import at the top
 from parking.parking_routes import router as parking_router
 load_dotenv()
@@ -28,6 +27,7 @@ app.add_middleware(
 
 # Add this after you initialize your FastAPI `app`
 app.include_router(parking_router)
+app.include_router(booking_router)
 client = genai.Client(api_key=api_key) if api_key else None
 
 class HistoryMessage(BaseModel):

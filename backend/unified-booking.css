@@ -1,0 +1,387 @@
+/* ==========================================
+   EMBER UNIFIED BOOKING EXPERIENCE
+========================================== */
+
+.unified-booking-form {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.booking-section {
+    padding: 1.8rem 0;
+    border-bottom: 1px solid var(--line);
+}
+
+.booking-section[hidden] {
+    display: none !important;
+}
+
+.booking-section-heading {
+    margin-bottom: 1.8rem;
+}
+
+.booking-section-heading > span {
+    display: block;
+    color: var(--gold);
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.booking-section-heading h3 {
+    font-family: var(--serif);
+    font-size: 2rem;
+    font-weight: 500;
+    color: var(--text);
+}
+
+.booking-section-heading p {
+    color: var(--text-soft);
+    font-size: 0.9rem;
+    margin-top: 0.4rem;
+}
+
+.unified-booking-form .form-grid {
+    gap: 1.2rem;
+}
+
+.unified-booking-form input,
+.unified-booking-form select,
+.unified-booking-form textarea {
+    width: 100%;
+}
+
+.vehicle-options,
+.allocation-options {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.8rem;
+}
+
+.vehicle-option,
+.allocation-option {
+    background: var(--bg-soft);
+    border: 1px solid var(--line-strong);
+    color: var(--text);
+    border-radius: var(--radius-md);
+    padding: 1.4rem;
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    gap: 0.5rem;
+    transition: all 250ms ease;
+}
+
+.vehicle-option:hover,
+.allocation-option:hover,
+.vehicle-option.active,
+.allocation-option.active {
+    border-color: var(--gold);
+    background: rgba(176, 123, 63, 0.09);
+    transform: translateY(-3px);
+}
+
+.vehicle-option strong,
+.allocation-option strong {
+    font-family: var(--serif);
+    font-size: 1.3rem;
+    font-weight: 500;
+}
+
+.vehicle-option small,
+.allocation-option small {
+    font-size: 0.75rem;
+    color: var(--muted);
+    line-height: 1.5;
+}
+
+.conditional-booking {
+    margin-top: 2rem;
+}
+
+.conditional-booking h4 {
+    color: var(--text);
+    font-family: var(--serif);
+    font-size: 1.45rem;
+    font-weight: 500;
+    margin-bottom: 1rem;
+}
+
+.yes-no-options {
+    display: flex;
+    gap: 1rem;
+}
+
+.parking-answer {
+    padding: 0.9rem 1.3rem;
+    border: 1px solid var(--line-strong);
+    border-radius: 30px;
+    background: var(--surface);
+    color: var(--text);
+    transition: all 200ms ease;
+}
+
+.parking-answer.active,
+.parking-answer:hover {
+    background: var(--gold);
+    color: white;
+    border-color: var(--gold);
+}
+
+.booking-message,
+.booking-feedback {
+    margin-top: 1rem;
+    color: var(--text-soft);
+    font-size: 0.85rem;
+}
+
+.accessible-toggle {
+    padding: 1.2rem;
+    display: flex;
+    gap: 0.8rem;
+    border: 1px solid var(--line-strong);
+    background: var(--bg-soft);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+}
+
+.accessible-toggle input {
+    width: 18px;
+    height: 18px;
+    accent-color: var(--gold);
+    flex-shrink: 0;
+}
+
+.accessible-toggle span {
+    color: var(--text);
+    font-size: 0.9rem;
+}
+
+.accessible-toggle small {
+    display: block;
+    margin-top: 5px;
+    color: var(--muted);
+    font-size: 0.75rem;
+}
+
+.parking-status {
+    padding: 1rem;
+    margin: 1.2rem 0;
+    background: var(--bg-soft);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    color: var(--text-soft);
+    font-size: 0.85rem;
+}
+
+.allocation-options {
+    grid-template-columns: repeat(2, 1fr);
+    margin-top: 1.2rem;
+}
+
+.parking-map-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 2rem 0 1rem;
+}
+
+.parking-map-header h4 {
+    font-family: var(--serif);
+    font-size: 1.5rem;
+    font-weight: 500;
+    color: var(--text);
+}
+
+.parking-map-header span {
+    color: var(--gold);
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+}
+
+.parking-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 1.2rem;
+}
+
+.parking-legend span {
+    font-size: 0.7rem;
+    color: var(--text-soft);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.dot {
+    width: 9px;
+    height: 9px;
+    display: inline-block;
+    border-radius: 3px;
+}
+
+.dot.green {
+    background: #258653;
+}
+.dot.red {
+    background: #c74646;
+}
+.dot.orange {
+    background: #d58c32;
+}
+.dot.blue {
+    background: #4386d4;
+}
+
+.parking-gate {
+    padding: 0.7rem;
+    text-align: center;
+    color: var(--gold);
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    border-top: 2px solid var(--gold);
+    border-bottom: 1px solid var(--line);
+    margin-bottom: 1rem;
+}
+
+.parking-grid {
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 0.7rem;
+    padding: 1rem;
+    background: var(--bg-soft);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+}
+
+.parking-slot {
+    min-height: 70px;
+    border-radius: 8px;
+    border: 2px solid transparent;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    transition: all 200ms ease;
+}
+
+.parking-slot strong {
+    font-size: 0.85rem;
+}
+.parking-slot small {
+    font-size: 0.65rem;
+}
+
+.parking-slot.available {
+    background: #258653;
+}
+.parking-slot.occupied {
+    background: #bd4444;
+}
+.parking-slot.reserved {
+    background: #b77b2c;
+}
+.parking-slot.accessible.available {
+    background: #4386d4;
+}
+
+.parking-slot.unselectable {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.parking-slot.available:not(:disabled):hover {
+    transform: translateY(-4px);
+    filter: brightness(1.15);
+}
+
+.parking-slot.selected {
+    border-color: var(--gold-soft);
+    outline: 2px solid var(--gold-soft);
+    outline-offset: 2px;
+}
+
+.parking-map-hint {
+    color: var(--muted);
+    font-size: 0.75rem;
+    margin-top: 0.8rem;
+}
+
+.selected-parking {
+    margin-top: 1.5rem;
+    padding: 1.3rem;
+    border: 1px solid var(--gold);
+    border-radius: var(--radius-md);
+    background: rgba(176, 123, 63, 0.06);
+    color: var(--text);
+    line-height: 1.8;
+}
+
+.booking-summary {
+    padding: 1.5rem;
+    border: 1px solid var(--gold);
+    border-radius: var(--radius-lg);
+    background: var(--bg-soft);
+    color: var(--text);
+}
+
+.booking-summary h4 {
+    font-family: var(--serif);
+    color: var(--gold);
+    font-size: 1.4rem;
+    margin-bottom: 0.8rem;
+}
+
+.booking-summary p {
+    font-size: 0.85rem;
+    margin: 0.35rem 0;
+}
+
+.booking-submit-area {
+    padding-top: 1rem;
+}
+
+.booking-feedback.error {
+    color: #c74646;
+}
+.booking-feedback.success {
+    color: #258653;
+}
+
+#finalBookingButton:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+@media (max-width: 700px) {
+    .vehicle-options {
+        grid-template-columns: 1fr;
+    }
+
+    .allocation-options {
+        grid-template-columns: 1fr;
+    }
+
+    .parking-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .yes-no-options {
+        flex-direction: column;
+    }
+
+    .yes-no-options button {
+        width: 100%;
+    }
+
+    .parking-map-header {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+}
