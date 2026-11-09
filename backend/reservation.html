@@ -9,6 +9,7 @@
         />
         <title>EMBER | Reservations</title>
         <link rel="stylesheet" href="ember-styles.css" />
+        <link rel="stylesheet" href="parking-styles.css" />
         <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     </head>
     <body style="background: var(--bg-soft)">
@@ -252,7 +253,298 @@
                     </div>
                 </div>
             </section>
+            <!-- ==========================================
+     EMBER SMART PARKING SYSTEM
+========================================== -->
 
+            <section
+                class="section ember-parking-section"
+                id="emberParking"
+                data-branch-id="EMBER_NEW_DELHI"
+            >
+                <div class="container">
+                    <article class="reservation-card parking-card">
+                        <div class="parking-heading">
+                            <p class="eyebrow">Arrival Experience</p>
+
+                            <h2 class="display-title">
+                                Arrive with <em>ease.</em>
+                            </h2>
+
+                            <p>
+                                Reserve your parking space before arriving at
+                                EMBER. Choose your own space or let us allocate
+                                one automatically.
+                            </p>
+                        </div>
+
+                        <!-- STEP 1: VEHICLE SELECTION -->
+
+                        <div class="parking-step">
+                            <span class="parking-step-label">01 / ARRIVAL</span>
+
+                            <h3>How will you be arriving?</h3>
+
+                            <div class="parking-choice-grid">
+                                <button
+                                    type="button"
+                                    class="parking-choice"
+                                    data-arrival="car"
+                                >
+                                    <span class="parking-choice-icon">01</span>
+                                    <strong>Car</strong>
+                                    <small>Car parking</small>
+                                </button>
+
+                                <button
+                                    type="button"
+                                    class="parking-choice"
+                                    data-arrival="bike"
+                                >
+                                    <span class="parking-choice-icon">02</span>
+                                    <strong>Bike</strong>
+                                    <small>Two-wheeler parking</small>
+                                </button>
+
+                                <button
+                                    type="button"
+                                    class="parking-choice"
+                                    data-arrival="other"
+                                >
+                                    <span class="parking-choice-icon">03</span>
+                                    <strong>Other</strong>
+                                    <small>Other arrival options</small>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- STEP 2: PARKING REQUIREMENT -->
+
+                        <div class="parking-step" id="parkingNeedStep" hidden>
+                            <span class="parking-step-label"
+                                >02 / REQUIREMENT</span
+                            >
+
+                            <h3>Would you like us to reserve parking?</h3>
+
+                            <div class="parking-action-row">
+                                <button
+                                    type="button"
+                                    class="btn parking-need-btn"
+                                    data-parking-needed="yes"
+                                >
+                                    Yes, reserve parking
+                                </button>
+
+                                <button
+                                    type="button"
+                                    class="btn-outline parking-need-btn"
+                                    data-parking-needed="no"
+                                >
+                                    No, thank you
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- OTHER VEHICLE MESSAGE -->
+
+                        <div
+                            id="parkingUnsupported"
+                            class="parking-notice"
+                            hidden
+                        >
+                            Our current parking system supports dedicated car
+                            and bike spaces only. We cannot allocate a parking
+                            slot for this arrival category yet.
+                        </div>
+
+                        <!-- STEP 3: PARKING CONTROLS -->
+
+                        <div id="parkingControls" hidden>
+                            <div class="parking-divider"></div>
+
+                            <span class="parking-step-label"
+                                >03 / YOUR PARKING</span
+                            >
+
+                            <h3>Select your parking preference</h3>
+
+                            <p class="parking-branch-label">
+                                Location: EMBER — New Delhi (Demo Branch)
+                            </p>
+
+                            <!-- ACCESSIBLE PARKING -->
+
+                            <label class="parking-accessibility">
+                                <input type="checkbox" id="parkingAccessible" />
+
+                                <span>
+                                    I require an accessible parking space
+                                    <small
+                                        >C01–C05 / B01–B05 · Within 10
+                                        metres</small
+                                    >
+                                </span>
+                            </label>
+
+                            <!-- AVAILABILITY -->
+
+                            <div
+                                class="parking-availability"
+                                id="parkingAvailability"
+                                aria-live="polite"
+                            >
+                                Loading parking availability...
+                            </div>
+
+                            <!-- ALLOCATION MODE -->
+
+                            <div class="parking-mode-grid">
+                                <button
+                                    type="button"
+                                    class="parking-mode"
+                                    data-parking-mode="manual"
+                                >
+                                    <strong>Choose My Parking</strong>
+
+                                    <small>
+                                        Explore the parking layout and select
+                                        your preferred available space.
+                                    </small>
+                                </button>
+
+                                <button
+                                    type="button"
+                                    class="parking-mode"
+                                    data-parking-mode="random"
+                                >
+                                    <strong>Automatic Allocation</strong>
+
+                                    <small>
+                                        Let EMBER randomly allocate an available
+                                        eligible space.
+                                    </small>
+                                </button>
+                            </div>
+
+                            <!-- VISUAL PARKING MAP -->
+
+                            <div id="parkingMapPanel" hidden>
+                                <div class="parking-map-heading">
+                                    <div>
+                                        <span class="parking-step-label">
+                                            INTERACTIVE PARKING MAP
+                                        </span>
+
+                                        <h3>Select an available space</h3>
+                                    </div>
+
+                                    <span
+                                        id="parkingVehicleLabel"
+                                        class="parking-vehicle-label"
+                                    >
+                                    </span>
+                                </div>
+
+                                <!-- LEGEND -->
+
+                                <div class="parking-legend">
+                                    <span>
+                                        <i class="legend-dot available"></i>
+                                        Available
+                                    </span>
+
+                                    <span>
+                                        <i class="legend-dot occupied"></i>
+                                        Occupied
+                                    </span>
+
+                                    <span>
+                                        <i class="legend-dot reserved"></i>
+                                        Reserved
+                                    </span>
+
+                                    <span>
+                                        <i class="legend-dot accessible"></i>
+                                        Accessible
+                                    </span>
+                                </div>
+
+                                <!-- ENTRANCE -->
+
+                                <div class="parking-entrance">
+                                    <span>RESTAURANT ENTRANCE</span>
+
+                                    <div class="parking-entrance-line"></div>
+                                </div>
+
+                                <!-- GENERATED SLOTS -->
+
+                                <div
+                                    id="parkingSlotsGrid"
+                                    class="parking-slots-grid"
+                                ></div>
+
+                                <p class="parking-map-note">
+                                    Select a green or eligible blue parking
+                                    space. Hover over any space to view its
+                                    details.
+                                </p>
+                            </div>
+
+                            <!-- SELECTED SLOT -->
+
+                            <div
+                                id="parkingSelection"
+                                class="parking-selection"
+                                hidden
+                            >
+                                <span class="parking-step-label">
+                                    YOUR SELECTION
+                                </span>
+
+                                <div
+                                    class="parking-selection-details"
+                                    id="parkingSelectionDetails"
+                                ></div>
+                            </div>
+
+                            <!-- CONFIRMATION -->
+
+                            <div class="parking-confirm-area">
+                                <button
+                                    type="button"
+                                    class="btn"
+                                    id="parkingConfirm"
+                                    disabled
+                                >
+                                    Confirm Parking
+                                </button>
+
+                                <button
+                                    type="button"
+                                    class="btn-outline"
+                                    id="parkingCancel"
+                                    hidden
+                                >
+                                    Cancel Parking
+                                </button>
+                            </div>
+
+                            <!-- RESULT / ERRORS -->
+
+                            <div
+                                id="parkingMessage"
+                                class="parking-message"
+                                role="status"
+                                aria-live="polite"
+                            ></div>
+                        </div>
+                    </article>
+                </div>
+            </section>
+
+            <!-- END EMBER SMART PARKING -->
             <section class="section" style="padding-top: 0">
                 <div class="container">
                     <div class="grid-2">
@@ -582,5 +874,7 @@
         </div>
 
         <script src="jslogic.js"></script>
+        <script src="parking-ui.js"></script>
+        >
     </body>
 </html>
