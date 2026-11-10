@@ -5,32 +5,46 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta
             name="description"
-            content="Reserve a table at EMBER - Fine Dining in New Delhi."
+            content="Reserve a table and parking space at EMBER Fine Dining, New Delhi."
         />
+
         <title>EMBER | Reservations</title>
+
         <link rel="stylesheet" href="ember-styles.css" />
+        <link rel="stylesheet" href="unified-booking.css" />
+
         <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+        <style>
+            [hidden] {
+                display: none !important;
+            }
+        </style>
     </head>
+
     <body style="background: var(--bg-soft)">
+        <!-- HEADER -->
         <header class="site-header">
             <div class="header-inner">
                 <a class="brand" href="index.html">
-                    <span class="brand-mark"
-                        ><span class="gold-letter">E</span> M B E R</span
-                    >
+                    <span class="brand-mark">
+                        <span class="gold-letter">E</span> M B E R
+                    </span>
                     <span class="brand-copy">Reservations</span>
                 </a>
+
                 <nav class="site-nav">
                     <a href="index.html">Back to Home</a>
                 </nav>
+
                 <div class="header-actions" style="margin-left: auto">
-                    <!-- ANIMATED THEME TOGGLE -->
                     <label class="theme-switch" title="Toggle Dark Mode">
                         <input
                             type="checkbox"
                             id="themeToggleSecondary"
                             class="themeToggle"
                         />
+
                         <div class="slider round">
                             <svg
                                 class="icon-sun"
@@ -69,6 +83,7 @@
                                     y2="4.22"
                                 ></line>
                             </svg>
+
                             <svg
                                 class="icon-moon"
                                 viewBox="0 0 24 24"
@@ -90,18 +105,25 @@
             class="page-shell"
             style="padding-bottom: 4rem; padding-top: 8rem"
         >
+            <!-- =========================================
+                 RESERVATION AND PARKING FORM
+            ========================================== -->
+
             <section class="section">
                 <div class="container">
                     <div class="story-split">
+                        <!-- LEFT SIDE: INFORMATION -->
                         <article class="reservation-copy fade-in">
                             <p class="eyebrow">Book Ahead</p>
+
                             <h2 class="display-title">
-                                Reserve a table at <em>EMBER</em>.
+                                Reserve your table at <em>EMBER</em>.
                             </h2>
+
                             <p class="section-lead">
-                                Make a dinner booking, request the private room,
-                                or leave a note for special occasions. We ensure
-                                every detail is prepared prior to your arrival.
+                                Plan your visit with us. Reserve your dining
+                                experience and arrange your parking space
+                                through one booking.
                             </p>
 
                             <div
@@ -118,16 +140,21 @@
                                             font-size: 0.75rem;
                                             margin-bottom: 0.4rem;
                                         "
-                                        >Lunch Service</strong
                                     >
+                                        Main Dining Room
+                                    </strong>
+
                                     <span
                                         style="
                                             font-size: 1.1rem;
                                             color: var(--text);
                                         "
-                                        >Mon to Fri — 12:30 PM to 2:30 PM</span
                                     >
+                                        Available booking times: 7:00 PM and
+                                        9:30 PM
+                                    </span>
                                 </div>
+
                                 <div style="margin-bottom: 2rem">
                                     <strong
                                         style="
@@ -138,16 +165,46 @@
                                             font-size: 0.75rem;
                                             margin-bottom: 0.4rem;
                                         "
-                                        >Dinner Service</strong
                                     >
+                                        Chef's Counter
+                                    </strong>
+
                                     <span
                                         style="
                                             font-size: 1.1rem;
                                             color: var(--text);
                                         "
-                                        >Daily — 7:00 PM to 11:00 PM</span
                                     >
+                                        8:30 PM booking, subject to availability
+                                        and a maximum of 2 guests.
+                                    </span>
                                 </div>
+
+                                <div style="margin-bottom: 2rem">
+                                    <strong
+                                        style="
+                                            color: var(--gold);
+                                            display: block;
+                                            text-transform: uppercase;
+                                            letter-spacing: 0.15em;
+                                            font-size: 0.75rem;
+                                            margin-bottom: 0.4rem;
+                                        "
+                                    >
+                                        The Oak Room
+                                    </strong>
+
+                                    <span
+                                        style="
+                                            font-size: 1.1rem;
+                                            color: var(--text);
+                                        "
+                                    >
+                                        Advance bookings only, more than 42 days
+                                        ahead.
+                                    </span>
+                                </div>
+
                                 <div
                                     class="info-callout"
                                     style="
@@ -165,41 +222,51 @@
                                             font-size: 0.95rem;
                                         "
                                     >
-                                        <strong>Note for large parties:</strong>
-                                        For groups of 8 or more, please use the
-                                        special requests field to mention your
-                                        preferred seating time, or contact us
-                                        directly to reserve The Oak Room.
+                                        <strong>Parking information:</strong>
+                                        You can request a car or bike parking
+                                        space while making your dining
+                                        reservation. Accessible spaces are
+                                        available for customers who require
+                                        accessible parking.
                                     </p>
                                 </div>
                             </div>
                         </article>
 
+                        <!-- RIGHT SIDE: BOOKING FORM -->
                         <article class="reservation-card fade-in delay-1">
-                            <form
-                                id="reservationForm"
-                                onsubmit="
-                                    event.preventDefault();
-                                    alert(
-                                        'Reservation Requested! Ready to hook to backend API.',
-                                    );
-                                    document
-                                        .getElementById('reservationForm')
-                                        .reset();
-                                "
-                            >
+                            <form id="reservationForm">
+                                <p class="eyebrow">Your Reservation</p>
+
+                                <h3
+                                    style="
+                                        font-family: var(--serif);
+                                        font-size: 2rem;
+                                        color: var(--text);
+                                        margin-bottom: 1.5rem;
+                                        font-weight: 500;
+                                    "
+                                >
+                                    Booking Details
+                                </h3>
+
+                                <!-- CUSTOMER DETAILS -->
                                 <div class="form-grid">
                                     <div class="field">
-                                        <label for="name">Name</label>
+                                        <label for="name">Full Name</label>
+
                                         <input
                                             id="name"
                                             type="text"
                                             placeholder="Your full name"
+                                            minlength="2"
                                             required
                                         />
                                     </div>
+
                                     <div class="field">
-                                        <label for="email">Email</label>
+                                        <label for="email">Email Address</label>
+
                                         <input
                                             id="email"
                                             type="email"
@@ -207,60 +274,478 @@
                                             required
                                         />
                                     </div>
+
+                                    <!-- BRANCH -->
                                     <div class="field">
-                                        <label for="guests">Guests</label>
+                                        <label for="branch">
+                                            Restaurant Branch
+                                        </label>
+
+                                        <select id="branch" required>
+                                            <option value="" selected disabled>
+                                                Select branch
+                                            </option>
+
+                                            <option value="EMBER_NEW_DELHI">
+                                                EMBER — New Delhi
+                                            </option>
+                                        </select>
+                                    </div>
+
+                                    <!-- GUESTS -->
+                                    <div class="field">
+                                        <label for="guests">
+                                            Number of Guests
+                                        </label>
+
                                         <select id="guests" required>
                                             <option value="" selected disabled>
                                                 Select guests
                                             </option>
-                                            <option>1 guest</option>
-                                            <option>2 guests</option>
-                                            <option>3 guests</option>
-                                            <option>4 guests</option>
-                                            <option>5 guests</option>
-                                            <option>6+ guests</option>
+
+                                            <option value="1">1 Guest</option>
+                                            <option value="2">2 Guests</option>
+                                            <option value="3">3 Guests</option>
+                                            <option value="4">4 Guests</option>
+                                            <option value="5">5 Guests</option>
+                                            <option value="6">6 Guests</option>
+                                            <option value="7">7 Guests</option>
+                                            <option value="8">8 Guests</option>
+                                            <option value="9">9 Guests</option>
+                                            <option value="10">
+                                                10 Guests
+                                            </option>
+                                            <option value="11">
+                                                11 Guests
+                                            </option>
+                                            <option value="12">
+                                                12 Guests
+                                            </option>
+                                            <option value="13">
+                                                13 Guests
+                                            </option>
+                                            <option value="14">
+                                                14 Guests
+                                            </option>
+                                            <option value="15">
+                                                15 Guests
+                                            </option>
+                                            <option value="16">
+                                                16 Guests
+                                            </option>
+                                            <option value="17">
+                                                17 Guests
+                                            </option>
+                                            <option value="18">
+                                                18 Guests
+                                            </option>
+                                            <option value="19">
+                                                19 Guests
+                                            </option>
+                                            <option value="20">
+                                                20 Guests
+                                            </option>
                                         </select>
                                     </div>
+
+                                    <!-- DATE -->
                                     <div class="field">
-                                        <label for="date">Date</label>
+                                        <label for="date"
+                                            >Reservation Date</label
+                                        >
+
                                         <input id="date" type="date" required />
                                     </div>
+
+                                    <!-- ROOM -->
+                                    <div class="field">
+                                        <label for="room">Dining Area</label>
+
+                                        <select id="room" required>
+                                            <option value="" selected disabled>
+                                                Select dining area
+                                            </option>
+
+                                            <option value="Main Dining Room">
+                                                Main Dining Room
+                                            </option>
+
+                                            <option value="Chef's Counter">
+                                                Chef's Counter
+                                            </option>
+
+                                            <option value="The Oak Room">
+                                                The Oak Room
+                                            </option>
+                                        </select>
+                                    </div>
+
+                                    <!-- TIME -->
+                                    <div class="field">
+                                        <label for="time"
+                                            >Reservation Time</label
+                                        >
+
+                                        <select id="time" required>
+                                            <option value="" selected disabled>
+                                                Select dining area first
+                                            </option>
+                                        </select>
+                                    </div>
                                 </div>
+
+                                <!-- SPECIAL REQUESTS -->
                                 <div
                                     class="field full"
                                     style="margin-top: 1.5rem"
                                 >
-                                    <label for="requests"
-                                        >Special Requests</label
-                                    >
+                                    <label for="requests">
+                                        Special Requests
+                                    </label>
+
                                     <textarea
                                         id="requests"
-                                        placeholder="Allergies, celebrations, or seating preferences..."
+                                        placeholder="Allergies, celebrations, seating preferences..."
+                                        rows="4"
                                     ></textarea>
                                 </div>
-                                <div style="margin-top: 2rem">
+
+                                <!-- =====================================
+                                     PARKING QUESTION
+                                ====================================== -->
+
+                                <div
+                                    class="booking-parking-question"
+                                    id="parkingQuestion"
+                                    style="margin-top: 2.5rem"
+                                >
+                                    <p class="eyebrow">Arrival Details</p>
+
+                                    <h3
+                                        style="
+                                            font-family: var(--serif);
+                                            font-size: 1.7rem;
+                                            color: var(--text);
+                                            margin-bottom: 0.6rem;
+                                            font-weight: 500;
+                                        "
+                                    >
+                                        Do you need parking?
+                                    </h3>
+
+                                    <p
+                                        style="
+                                            color: var(--text-soft);
+                                            margin-bottom: 1.2rem;
+                                        "
+                                    >
+                                        Reserve a parking space along with your
+                                        restaurant table.
+                                    </p>
+
+                                    <div class="booking-choice-row">
+                                        <button
+                                            type="button"
+                                            class="btn parking-choice-button"
+                                            data-parking="yes"
+                                        >
+                                            Yes, I need parking
+                                        </button>
+
+                                        <button
+                                            type="button"
+                                            class="btn parking-choice-button"
+                                            data-parking="no"
+                                        >
+                                            No parking required
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- =====================================
+                                     PARKING CONTROLS
+                                ====================================== -->
+
+                                <div
+                                    id="parkingSection"
+                                    class="parking-section"
+                                    hidden
+                                >
+                                    <div style="margin-top: 2rem">
+                                        <p class="eyebrow">Vehicle Details</p>
+
+                                        <h3
+                                            style="
+                                                font-family: var(--serif);
+                                                font-size: 1.7rem;
+                                                color: var(--text);
+                                                margin-bottom: 1rem;
+                                                font-weight: 500;
+                                            "
+                                        >
+                                            Select your vehicle
+                                        </h3>
+
+                                        <div class="booking-choice-row">
+                                            <button
+                                                type="button"
+                                                class="btn vehicle-choice-button"
+                                                data-vehicle="car"
+                                            >
+                                                Car
+                                            </button>
+
+                                            <button
+                                                type="button"
+                                                class="btn vehicle-choice-button"
+                                                data-vehicle="bike"
+                                            >
+                                                Bike
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <!-- ACCESSIBLE PARKING -->
+                                    <div
+                                        class="field full"
+                                        style="margin-top: 1.8rem"
+                                    >
+                                        <label
+                                            for="accessibleRequired"
+                                            style="
+                                                display: flex;
+                                                align-items: flex-start;
+                                                gap: 0.75rem;
+                                                cursor: pointer;
+                                            "
+                                        >
+                                            <input
+                                                type="checkbox"
+                                                id="accessibleRequired"
+                                                style="
+                                                    width: auto;
+                                                    margin-top: 4px;
+                                                "
+                                            />
+
+                                            <span>
+                                                I require accessible parking.
+                                                Show me accessible spaces only.
+                                            </span>
+                                        </label>
+
+                                        <small
+                                            style="
+                                                display: block;
+                                                margin-top: 0.5rem;
+                                                color: var(--text-soft);
+                                            "
+                                        >
+                                            Accessible spaces are located within
+                                            10 metres of the restaurant
+                                            entrance.
+                                        </small>
+                                    </div>
+
+                                    <!-- ALLOCATION MODE -->
+                                    <div style="margin-top: 2rem">
+                                        <p class="eyebrow">Choose Your Space</p>
+
+                                        <h3
+                                            style="
+                                                font-family: var(--serif);
+                                                font-size: 1.7rem;
+                                                color: var(--text);
+                                                margin-bottom: 1rem;
+                                                font-weight: 500;
+                                            "
+                                        >
+                                            How would you like to park?
+                                        </h3>
+
+                                        <div class="booking-choice-row">
+                                            <button
+                                                type="button"
+                                                class="btn allocation-choice-button"
+                                                data-allocation="manual"
+                                            >
+                                                Choose My Slot
+                                            </button>
+
+                                            <button
+                                                type="button"
+                                                class="btn allocation-choice-button"
+                                                data-allocation="random"
+                                            >
+                                                Random Allocation
+                                            </button>
+                                        </div>
+
+                                        <p
+                                            style="
+                                                color: var(--text-soft);
+                                                font-size: 0.9rem;
+                                                margin-top: 0.8rem;
+                                            "
+                                        >
+                                            Choose a specific available space
+                                            yourself, or let the system randomly
+                                            assign one.
+                                        </p>
+                                    </div>
+
+                                    <!-- PARKING AVAILABILITY -->
+                                    <div
+                                        id="parkingAvailability"
+                                        class="parking-availability"
+                                        role="status"
+                                        aria-live="polite"
+                                        style="margin-top: 1.5rem"
+                                    ></div>
+
+                                    <!-- PARKING MAP -->
+                                    <div
+                                        id="parkingMapSection"
+                                        class="parking-map-section"
+                                        hidden
+                                        style="margin-top: 2rem"
+                                    >
+                                        <h3
+                                            id="parkingVehicleTitle"
+                                            style="
+                                                font-family: var(--serif);
+                                                font-size: 1.6rem;
+                                                color: var(--text);
+                                                margin-bottom: 1rem;
+                                            "
+                                        >
+                                            Available Parking Spaces
+                                        </h3>
+
+                                        <!-- MAP LEGEND -->
+                                        <div class="parking-map-legend">
+                                            <span>
+                                                <span
+                                                    class="legend-dot available"
+                                                ></span>
+                                                Available
+                                            </span>
+
+                                            <span>
+                                                <span
+                                                    class="legend-dot occupied"
+                                                ></span>
+                                                Occupied
+                                            </span>
+
+                                            <span>
+                                                <span
+                                                    class="legend-dot reserved"
+                                                ></span>
+                                                Reserved
+                                            </span>
+
+                                            <span>
+                                                <span
+                                                    class="legend-dot accessible"
+                                                ></span>
+                                                Accessible
+                                            </span>
+                                        </div>
+
+                                        <!-- SLOT GRID -->
+                                        <div
+                                            id="parkingGrid"
+                                            class="parking-grid"
+                                            aria-label="Parking slot layout"
+                                        ></div>
+
+                                        <!-- SELECTED PARKING -->
+                                        <div
+                                            id="selectedParking"
+                                            class="selected-parking"
+                                            role="status"
+                                            aria-live="polite"
+                                            style="margin-top: 1.2rem"
+                                        >
+                                            No parking space selected yet.
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- =====================================
+                                     BOOKING SUBMISSION
+                                ====================================== -->
+
+                                <div style="margin-top: 2.5rem">
                                     <button
+                                        id="finalBookingButton"
                                         class="btn"
                                         type="submit"
                                         style="width: 100%"
                                     >
-                                        Request Reservation
+                                        Confirm Reservation
                                     </button>
+
+                                    <p
+                                        id="bookingFeedback"
+                                        role="status"
+                                        aria-live="polite"
+                                        style="
+                                            margin-top: 1rem;
+                                            text-align: center;
+                                        "
+                                    ></p>
                                 </div>
                             </form>
+
+                            <!-- =====================================
+                                 FINAL BOOKING CONFIRMATION
+                            ====================================== -->
+
+                            <section
+                                id="finalBookingSection"
+                                class="final-booking-section"
+                                hidden
+                                style="margin-top: 2rem"
+                            >
+                                <p class="eyebrow">Booking Confirmation</p>
+
+                                <h3
+                                    style="
+                                        font-family: var(--serif);
+                                        font-size: 1.8rem;
+                                        color: var(--text);
+                                    "
+                                >
+                                    Your EMBER Reservation
+                                </h3>
+
+                                <div
+                                    id="bookingSummary"
+                                    class="booking-summary"
+                                    style="margin-top: 1rem"
+                                ></div>
+                            </section>
                         </article>
                     </div>
                 </div>
             </section>
 
+            <!-- =========================================
+                 CONTACT AND AI CONCIERGE
+            ========================================== -->
+
             <section class="section" style="padding-top: 0">
                 <div class="container">
                     <div class="grid-2">
+                        <!-- CONTACT INFORMATION -->
                         <article
                             class="reservation-card fade-in delay-2"
                             style="padding: 2.5rem"
                         >
                             <p class="eyebrow">Contact Us</p>
+
                             <h3
                                 style="
                                     font-family: var(--serif);
@@ -272,6 +757,7 @@
                             >
                                 Get in touch directly.
                             </h3>
+
                             <div
                                 style="
                                     display: flex;
@@ -290,13 +776,16 @@
                                             letter-spacing: 0.15em;
                                             margin-bottom: 4px;
                                         "
-                                        >Address</strong
                                     >
-                                    <span
-                                        >12 Mehrauli Road, Qutub Enclave, New
-                                        Delhi - 110016</span
-                                    >
+                                        Address
+                                    </strong>
+
+                                    <span>
+                                        12 Mehrauli Road, Qutub Enclave, New
+                                        Delhi - 110016
+                                    </span>
                                 </div>
+
                                 <div>
                                     <strong
                                         style="
@@ -307,14 +796,18 @@
                                             letter-spacing: 0.15em;
                                             margin-bottom: 4px;
                                         "
-                                        >Phone</strong
                                     >
+                                        Phone
+                                    </strong>
+
                                     <a
                                         href="tel:+919811044221"
                                         style="font-weight: 500"
-                                        >+91 98110 44221</a
                                     >
+                                        +91 98110 44221
+                                    </a>
                                 </div>
+
                                 <div>
                                     <strong
                                         style="
@@ -325,17 +818,21 @@
                                             letter-spacing: 0.15em;
                                             margin-bottom: 4px;
                                         "
-                                        >Email</strong
                                     >
+                                        Email
+                                    </strong>
+
                                     <a
                                         href="mailto:hello@emberrestaurant.in"
                                         style="font-weight: 500"
-                                        >hello@emberrestaurant.in</a
                                     >
+                                        hello@emberrestaurant.in
+                                    </a>
                                 </div>
                             </div>
                         </article>
 
+                        <!-- AI CONCIERGE INTRODUCTION -->
                         <article
                             class="reservation-card fade-in delay-3"
                             style="
@@ -348,6 +845,7 @@
                             "
                         >
                             <p class="eyebrow">Instant Answers</p>
+
                             <h3
                                 style="
                                     font-family: var(--serif);
@@ -359,6 +857,7 @@
                             >
                                 Ask our AI Concierge.
                             </h3>
+
                             <p
                                 style="
                                     color: var(--text-soft);
@@ -368,12 +867,14 @@
                                 "
                             >
                                 Need help with dietary requirements, private
-                                dining details, or specific menu
+                                dining details, parking information, or menu
                                 recommendations? Our AI assistant is available
-                                24/7 to help you plan your visit flawlessly.
+                                to help you plan your visit.
                             </p>
+
                             <button
                                 class="btn"
+                                type="button"
                                 onclick="window.openAIPanel()"
                                 style="width: 100%"
                             >
@@ -385,7 +886,10 @@
             </section>
         </main>
 
-        <!-- ELITE AI CONCIERGE WIDGET -->
+        <!-- =========================================
+             EMBER AI CONCIERGE WIDGET
+        ========================================== -->
+
         <div class="ember-ai">
             <div class="ember-ai-panel" id="aiPanel" aria-hidden="true">
                 <div class="panel-morph-cover" id="panelMorphCover">
@@ -394,6 +898,7 @@
                 </div>
 
                 <div class="ai-panel-inner">
+                    <!-- AI HEADER -->
                     <div
                         class="ember-ai-panel-head"
                         id="aiDragHandle"
@@ -402,8 +907,10 @@
                         <div class="ai-head-content">
                             <div>
                                 <p class="ember-ai-kicker">Ember Assistant</p>
+
                                 <h2>How can we help?</h2>
                             </div>
+
                             <div class="ai-head-controls">
                                 <button
                                     class="ember-ai-icon-btn"
@@ -428,10 +935,12 @@
                                             rx="2"
                                             ry="2"
                                         ></rect>
+
                                         <path
                                             d="M7 11V7a5 5 0 0 1 10 0v4"
                                         ></path>
                                     </svg>
+
                                     <svg
                                         id="icon-unlocked"
                                         style="display: none"
@@ -450,11 +959,13 @@
                                             rx="2"
                                             ry="2"
                                         ></rect>
+
                                         <path
                                             d="M7 11V7a5 5 0 0 1 9.9-1"
                                         ></path>
                                     </svg>
                                 </button>
+
                                 <button
                                     class="ember-ai-icon-btn"
                                     id="aiClose"
@@ -474,6 +985,7 @@
                                             x2="6"
                                             y2="18"
                                         ></line>
+
                                         <line
                                             x1="6"
                                             y1="6"
@@ -486,6 +998,7 @@
                         </div>
                     </div>
 
+                    <!-- AI CHAT BODY -->
                     <div class="ember-ai-panel-body">
                         <div
                             id="aiQuickQuestionsWrapper"
@@ -494,7 +1007,7 @@
                             <p class="ember-ai-section-label">
                                 Quick Questions
                             </p>
-                            <!-- EMPTY CONTAINER FOR JS INJECTION -->
+
                             <div
                                 class="ember-ai-chip-row"
                                 id="aiQuickReplies"
@@ -508,6 +1021,7 @@
                         ></div>
                     </div>
 
+                    <!-- AI CHAT INPUT -->
                     <div class="ember-ai-composer">
                         <div class="composer-pill">
                             <textarea
@@ -516,6 +1030,7 @@
                                 aria-label="Chat input"
                                 rows="1"
                             ></textarea>
+
                             <div class="composer-actions">
                                 <button
                                     class="composer-icon-btn"
@@ -536,9 +1051,11 @@
                                         <path
                                             d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"
                                         ></path>
+
                                         <path
                                             d="M19 10v2a7 7 0 0 1-14 0v-2"
                                         ></path>
+
                                         <line
                                             x1="12"
                                             y1="19"
@@ -547,6 +1064,7 @@
                                         ></line>
                                     </svg>
                                 </button>
+
                                 <button
                                     class="composer-send-btn"
                                     id="aiSend"
@@ -569,6 +1087,7 @@
                                             x2="11"
                                             y2="13"
                                         ></line>
+
                                         <polygon
                                             points="22 2 15 22 11 13 2 9 22 2"
                                         ></polygon>
@@ -581,6 +1100,8 @@
             </div>
         </div>
 
+        <!-- SCRIPTS -->
         <script src="jslogic.js"></script>
+        <script src="unified-booking.js"></script>
     </body>
 </html>
