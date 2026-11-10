@@ -78,6 +78,15 @@ document.addEventListener("DOMContentLoaded", () => {
     // 1. VIP QUESTION ROULETTE
     // ==========================================
     const vipQuestionsList = [
+        "Can you help me find nearby restaurants?",
+        "Where can I find the EMBER location on the map?",
+        "How far is EMBER from my current location?",
+        "Can I find parking near EMBER?",
+        "Can I reserve parking for my car?",
+        "Do you have bike parking?",
+        "Can I reserve a table and parking together?",
+        "How does your parking reservation system work?",
+        "Can you help me navigate to EMBER?",
         "Is the Chef's Counter available tonight?",
         "What is your signature high-protein dish?",
         "I need to impress a client. Recommendations?",

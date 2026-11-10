@@ -3,7 +3,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (!form) return;
 
-    const API = "http://127.0.0.1:8000";
+    const API = (window.EMBER_API_BASE || "http://127.0.0.1:8000").replace(
+        /\/+$/,
+        "",
+    );
 
     const $ = (id) => document.getElementById(id);
 
@@ -94,26 +97,62 @@ document.addEventListener("DOMContentLoaded", () => {
     // ==================================
 
     async function apiRequest(path, options = {}) {
-        const response = await fetch(API + path, options);
+        let response;
 
-        const data = await response.json();
+        try {
+            response = await fetch(`${API}${path}`, {
+                ...options,
+
+                headers: {
+                    Accept: "application/json",
+
+                    ...(options.headers || {}),
+                },
+            });
+        } catch (error) {
+            console.error("EMBER API connection error:", error);
+
+            throw new Error(
+                `Cannot connect to EMBER backend at ${API}. Make sure FastAPI is running on port 8000.`,
+            );
+        }
+
+        const responseText = await response.text();
+
+        let data = {};
+
+        try {
+            data = responseText ? JSON.parse(responseText) : {};
+        } catch {
+            data = {
+                detail: responseText || "Invalid server response.",
+            };
+        }
 
         if (!response.ok) {
             throw new Error(
-                data.detail || "The request could not be completed.",
+                data.detail || `Request failed with status ${response.status}.`,
             );
         }
 
         return data;
     }
-
     // ==================================
-    // VEHICLE SELECTION
+    // VEHICLE SELECTION — FIXED
     // ==================================
 
     document.querySelectorAll("[data-vehicle]").forEach((button) => {
-        button.addEventListener("click", () => {
+        button.addEventListener("click", async () => {
+            // Vehicle selection is only allowed
+            // after the customer requests parking.
+
+            if (!parkingRequired) {
+                return;
+            }
+
             vehicle = button.dataset.vehicle;
+
+            // Update active vehicle button.
 
             document.querySelectorAll("[data-vehicle]").forEach((item) => {
                 item.classList.remove("active");
@@ -121,35 +160,66 @@ document.addEventListener("DOMContentLoaded", () => {
 
             button.classList.add("active");
 
+            // IMPORTANT:
+            // Keep the parking section visible.
+
+            parkingSection.hidden = false;
+
             parkingQuestion.hidden = false;
 
-            parkingSection.hidden = true;
+            // Reset previous parking selection.
 
-            parkingRequired = false;
             allocation = null;
+
             selectedSlot = null;
+
             slots = [];
 
-            $("arrivalMessage").textContent = "";
+            accessible = false;
+
+            accessibleInput.checked = false;
 
             selectionDisplay.hidden = true;
 
-            if (vehicle === "other") {
-                $("arrivalMessage").textContent =
-                    "Our dedicated parking currently supports cars and bikes. You can continue without a parking reservation.";
+            parkingMapSection.hidden = true;
+
+            parkingGrid.replaceChildren();
+
+            // Reset allocation buttons.
+
+            document.querySelectorAll("[data-allocation]").forEach((item) => {
+                item.classList.remove("active");
+            });
+
+            // Ensure a branch is selected.
+
+            if (!branch.value) {
+                parkingAvailability.textContent =
+                    "Please select an EMBER restaurant branch first.";
+
+                updateSummary();
+
+                return;
             }
+
+            // Load parking only AFTER vehicle selection.
+
+            parkingAvailability.textContent = `Loading ${vehicle} parking availability...`;
+
+            await loadSlots();
 
             updateSummary();
         });
     });
-
     // ==================================
-    // PARKING YES / NO
+    // PARKING YES / NO — FIXED
     // ==================================
 
     document.querySelectorAll("[data-parking]").forEach((button) => {
-        button.addEventListener("click", async () => {
-            const choice = button.dataset.parking;
+        button.addEventListener("click", () => {
+            const required = button.dataset.parking === "yes";
+
+            // Update active buttons.
 
             document.querySelectorAll("[data-parking]").forEach((item) => {
                 item.classList.remove("active");
@@ -157,61 +227,127 @@ document.addEventListener("DOMContentLoaded", () => {
 
             button.classList.add("active");
 
-            parkingRequired = choice === "yes";
+            parkingRequired = required;
 
-            parkingSection.hidden = true;
+            // Reset previous selection.
+
+            vehicle = null;
+
+            allocation = null;
+
+            selectedSlot = null;
+
+            slots = [];
+
+            accessible = false;
+
+            accessibleInput.checked = false;
 
             selectionDisplay.hidden = true;
 
-            allocation = null;
-            selectedSlot = null;
+            parkingMapSection.hidden = true;
+
+            parkingGrid.replaceChildren();
+
+            document.querySelectorAll("[data-vehicle]").forEach((item) => {
+                item.classList.remove("active");
+            });
+
+            document.querySelectorAll("[data-allocation]").forEach((item) => {
+                item.classList.remove("active");
+            });
 
             if (!parkingRequired) {
-                $("arrivalMessage").textContent =
-                    "No parking requested. Your restaurant reservation will continue without a parking allocation.";
+                // Customer does not need parking.
+
+                parkingSection.hidden = true;
+
+                parkingAvailability.textContent =
+                    "Parking not requested. Continue with your table reservation.";
 
                 updateSummary();
 
                 return;
             }
 
-            if (vehicle === "other") {
-                $("arrivalMessage").textContent =
-                    "Dedicated parking is currently available only for cars and bikes. Select No to continue without parking.";
-
-                parkingRequired = false;
-
-                button.classList.remove("active");
-
-                updateSummary();
-
-                return;
-            }
+            // Customer needs parking.
 
             parkingSection.hidden = false;
 
-            await loadSlots();
+            parkingAvailability.textContent =
+                "Select Car or Bike to check parking availability.";
+
+            feedback.textContent = "";
+
+            feedback.className = "booking-feedback";
+
+            updateSummary();
         });
     });
-
     // ==================================
-    // LOAD INVENTORY
+    // LOAD PARKING INVENTORY — FIXED
     // ==================================
 
     async function loadSlots() {
+        // Never fetch before the customer
+        // chooses Yes and selects a vehicle.
+
+        if (!parkingRequired || !vehicle) {
+            return;
+        }
+
+        // Validate branch.
+
+        if (!branch.value) {
+            parkingAvailability.textContent =
+                "Please select a restaurant branch.";
+
+            return;
+        }
+
         parkingAvailability.textContent = "Checking parking availability...";
 
+        feedback.textContent = "";
+
         try {
-            slots = await apiRequest(
+            const data = await apiRequest(
                 "/api/parking/slots?branch_id=" +
                     encodeURIComponent(branch.value),
             );
 
+            // Validate backend response.
+
+            if (!Array.isArray(data)) {
+                throw new Error(
+                    "Parking backend returned an invalid inventory.",
+                );
+            }
+
+            slots = data;
+
+            // Render available parking spaces.
+
             renderMap();
+
+            if (availableSlots().length === 0) {
+                parkingAvailability.textContent = `No eligible ${vehicle} parking spaces are currently available.`;
+            }
+
+            feedback.textContent = "";
         } catch (error) {
-            parkingAvailability.textContent = error.message;
+            console.error("EMBER parking inventory error:", error);
+
+            slots = [];
+
+            selectedSlot = null;
+
+            parkingGrid.replaceChildren();
+
+            parkingAvailability.textContent =
+                "Parking availability could not be loaded.";
 
             feedback.textContent = error.message;
+
             feedback.className = "booking-feedback error";
         }
     }
@@ -363,22 +499,25 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // ==================================
-    // BRANCH CHANGE
+    // BRANCH CHANGE — FIXED
     // ==================================
 
     branch.addEventListener("change", async () => {
         selectedSlot = null;
+
         slots = [];
 
         selectionDisplay.hidden = true;
 
-        if (parkingRequired) {
+        if (parkingRequired && vehicle) {
             await loadSlots();
+        } else if (parkingRequired) {
+            parkingAvailability.textContent =
+                "Select Car or Bike to check availability.";
         }
 
         updateSummary();
     });
-
     // ==================================
     // SUMMARY
     // ==================================
@@ -443,9 +582,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (submitting || confirmedBooking) return;
 
-        if (!vehicle) {
-            feedback.textContent = "Please select how you will be arriving.";
+        if (parkingRequired && !vehicle) {
+            feedback.textContent = "Please select your vehicle.";
+
             feedback.className = "booking-feedback error";
+
             return;
         }
 
@@ -488,7 +629,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
             special_requests: $("requests").value,
 
-            vehicle_type: vehicle,
+            vehicle_type: vehicle || "other",
 
             parking_required: parkingRequired,
 
