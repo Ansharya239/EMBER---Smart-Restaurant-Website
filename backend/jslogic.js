@@ -556,28 +556,53 @@ document.addEventListener("DOMContentLoaded", () => {
     } else if (aiVoiceBtn) {
         aiVoiceBtn.style.display = "none";
     }
+    // ==========================================
+    // 8. API CONNECTION & DIGITAL PASS SYSTEM
+    // ==========================================
+
+    let isFetching = false;
 
     // ==========================================
-    // 8. API CONNECTION & MESSAGE RENDERING
+    // API CONFIGURATION
     // ==========================================
-    let isFetching = false; // THE RACE CONDITION FIX
+
+    const EMBER_API_BASE = (
+        window.EMBER_API_BASE || "http://127.0.0.1:8000"
+    ).replace(/\/+$/, "");
+
+    // ==========================================
+    // QUICK REPLIES
+    // ==========================================
 
     window.sendQuickReply = function (text) {
         if (aiInput && !isFetching) {
             aiInput.value = text;
+
             processMessage();
         }
     };
 
+    // ==========================================
+    // MARKDOWN RENDERING
+    // ==========================================
+
     const renderMarkdown = (text) => {
-        if (typeof marked !== "undefined") return marked.parse(text);
-        return `<p>${text.replace(/\n/g, "<br>")}</p>`;
+        if (typeof marked !== "undefined") {
+            return marked.parse(text);
+        }
+
+        return `<p>${String(text).replace(/\n/g, "<br>")}</p>`;
     };
 
+    // ==========================================
+    // PROCESS AI MESSAGE
+    // ==========================================
+
     async function processMessage() {
-        if (isFetching) return; // Prevent user from double-sending and corrupting history!
+        if (isFetching) return;
 
         const text = aiInput.value.trim();
+
         if (!text) return;
 
         isFetching = true;
@@ -585,6 +610,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const quickQuestionsWrap = document.getElementById(
             "aiQuickQuestionsWrapper",
         );
+
         if (
             quickQuestionsWrap &&
             !quickQuestionsWrap.classList.contains("is-hidden")
@@ -592,119 +618,345 @@ document.addEventListener("DOMContentLoaded", () => {
             quickQuestionsWrap.classList.add("is-hidden");
         }
 
+        // Display user message.
+
         appendMessage(text, "user");
 
         aiInput.value = "";
+
         aiInput.style.height = "40px";
-        if (aiSend) aiSend.disabled = true;
+
+        if (aiSend) {
+            aiSend.disabled = true;
+        }
+
         stopTTS();
 
         const loadingId = appendLoading();
 
         try {
-            const response = await fetch("http://localhost:8000/chat", {
+            // =================================
+            // SEND MESSAGE TO GEMINI BACKEND
+            // =================================
+
+            const response = await fetch(`${EMBER_API_BASE}/chat`, {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ message: text, history: chatHistory }),
+
+                headers: {
+                    "Content-Type": "application/json",
+
+                    Accept: "application/json",
+                },
+
+                body: JSON.stringify({
+                    message: text,
+
+                    history: chatHistory,
+                }),
             });
 
-            if (!response.ok) throw new Error("Network response was not ok.");
+            if (!response.ok) {
+                const errorData = await response.json().catch(() => ({}));
+
+                throw new Error(
+                    errorData.detail ||
+                        `Concierge API error: ${response.status}`,
+                );
+            }
 
             const data = await response.json();
+
+            if (typeof data.reply !== "string" || !data.reply.trim()) {
+                throw new Error("The concierge returned an empty response.");
+            }
+
             removeMessage(loadingId);
 
-            if (data.reply) {
-                // THE RESILIENT VIP PASS INTERCEPTOR LOGIC
-                let cleanedReply = data.reply;
-                let ticketHTML = "";
-                const ticketRegex = /\[TICKET:\s*([\s\S]*?)\s*\]/; // Handles multi-line accidental spacing
-                const match = data.reply.match(ticketRegex);
+            // =================================
+            // DIGITAL PASS INTERCEPTOR
+            // =================================
 
-                if (match) {
-                    // Instantly erase the raw string from the text the user will read
-                    cleanedReply = data.reply.replace(ticketRegex, "").trim();
+            let cleanedReply = data.reply;
 
-                    // Split the variables out (Name | Date | Time | Room | Email | Guests)
-                    const details = match[1].split("|").map((s) => s.trim());
+            let passNode = null;
 
-                    // Allow parsing even if AI added an accidental extra pipe symbol
-                    if (details.length >= 6) {
-                        const [name, date, time, room, email, guests] = details;
+            let bookingErrorNode = null;
 
-                        // Generate the injected VIP Pass UI
-                        ticketHTML = `
-                            <div class="vip-pass-card">
-                                <div class="vip-pass-header">Confirmed Reservation</div>
-                                <div class="vip-pass-grid">
-                                    <div class="vip-pass-item"><span class="vip-pass-label">Guest</span><span class="vip-pass-value">${name}</span></div>
-                                    <div class="vip-pass-item"><span class="vip-pass-label">Party</span><span class="vip-pass-value">${guests}</span></div>
-                                    <div class="vip-pass-item"><span class="vip-pass-label">Date</span><span class="vip-pass-value">${date}</span></div>
-                                    <div class="vip-pass-item"><span class="vip-pass-label">Time</span><span class="vip-pass-value">${time}</span></div>
-                                    <div class="vip-pass-item" style="grid-column: 1 / -1;"><span class="vip-pass-label">Room</span><span class="vip-pass-value">${room}</span></div>
-                                </div>
-                                <div class="vip-pass-footer">Digital Pass Generated</div>
-                            </div>
-                        `;
+            // Detect the machine-readable ticket.
+
+            const ticketRegex = /\[TICKET:\s*([\s\S]*?)\s*\]/;
+
+            const match = data.reply.match(ticketRegex);
+
+            if (match) {
+                // Remove internal ticket from visible AI response.
+
+                cleanedReply = data.reply.replace(ticketRegex, "").trim();
+
+                try {
+                    // Check digital pass module.
+
+                    if (!window.EmberDigitalPass) {
+                        throw new Error(
+                            "Digital pass module is unavailable. Reload the website.",
+                        );
                     }
+
+                    // =================================
+                    // SUBMIT REAL BOOKING
+                    // =================================
+
+                    const booking =
+                        await window.EmberDigitalPass.confirmAiTicket(match[1]);
+
+                    // At this point the backend has
+                    // returned a confirmed booking.
+
+                    console.log("EMBER booking confirmed:", booking.booking_id);
+
+                    // =================================
+                    // GENERATE DIGITAL PASS
+                    // =================================
+
+                    try {
+                        passNode = window.EmberDigitalPass.createCard(booking);
+                    } catch (renderError) {
+                        console.error(
+                            "Digital pass rendering error:",
+                            renderError,
+                        );
+
+                        passNode = document.createElement("p");
+
+                        passNode.className = "ember-pass-error";
+
+                        passNode.textContent = `Booking ${booking.booking_id} is confirmed, but the digital pass could not be displayed.`;
+                    }
+
+                    // =================================
+                    // SAVE PASS FOR RESERVATION PAGE
+                    // =================================
+
+                    try {
+                        window.EmberDigitalPass.showOnReservationPage(booking);
+                    } catch (storageError) {
+                        console.error(
+                            "Could not display pass on reservation page:",
+                            storageError,
+                        );
+                    }
+
+                    // Confirm success in AI chat.
+
+                    cleanedReply +=
+                        "\n\nYour reservation and parking arrangements have been confirmed by our booking system. Your digital pass is displayed below.";
+                } catch (bookingError) {
+                    console.error("EMBER booking failed:", bookingError);
+
+                    bookingErrorNode = document.createElement("div");
+
+                    bookingErrorNode.className = "ember-pass-error";
+
+                    bookingErrorNode.textContent =
+                        "Your reservation was NOT confirmed. " +
+                        (bookingError.message ||
+                            "The booking system rejected the request.");
                 }
-
-                // Render both the markdown and the newly injected HTML ticket (if it exists)
-                const finalHTML = renderMarkdown(cleanedReply) + ticketHTML;
-                appendMessage(finalHTML, "model", true, cleanedReply);
-
-                chatHistory.push({ role: "user", text: text });
-                chatHistory.push({ role: "model", text: data.reply }); // Push actual reply to memory
             }
+
+            // =================================
+            // DISPLAY AI RESPONSE
+            // =================================
+
+            const finalHTML = renderMarkdown(cleanedReply);
+
+            appendMessage(
+                finalHTML,
+
+                "model",
+
+                true,
+
+                cleanedReply,
+
+                passNode,
+
+                bookingErrorNode,
+            );
+
+            // =================================
+            // UPDATE CHAT HISTORY
+            // =================================
+
+            chatHistory.push({
+                role: "user",
+
+                text: text,
+            });
+
+            // Do not store the internal ticket block
+            // in the model conversation history.
+
+            chatHistory.push({
+                role: "model",
+
+                text: cleanedReply,
+            });
         } catch (error) {
             removeMessage(loadingId);
+
+            console.error("EMBER chat error:", error);
+
             appendMessage(
-                "I apologize, the concierge desk is currently offline due to a network interruption.",
+                error.message ||
+                    "The concierge service is currently unavailable. Please try again.",
+
                 "model",
+
                 false,
             );
         } finally {
-            isFetching = false; // Lift the lock once API is done!
+            isFetching = false;
+
+            if (aiSend) {
+                aiSend.disabled = false;
+            }
         }
     }
 
-    function appendMessage(content, role, isHTML = false, rawTextForTTS = "") {
+    // ==========================================
+    // APPEND CHAT MESSAGE
+    // NOW SUPPORTS DIGITAL PASS
+    // ==========================================
+
+    function appendMessage(
+        content,
+        role,
+        isHTML = false,
+        rawTextForTTS = "",
+        extraNode = null,
+        errorNode = null,
+    ) {
         if (!aiMessages) return;
 
         const msgRow = document.createElement("div");
+
         msgRow.className = `ember-ai-message ember-ai-message-${role}`;
 
         const bubble = document.createElement("div");
+
         bubble.className = "ember-ai-bubble";
+
+        // MESSAGE CONTENT
 
         if (isHTML) {
             bubble.innerHTML = content;
         } else {
             const p = document.createElement("p");
+
             p.textContent = content;
+
             bubble.appendChild(p);
         }
 
+        // DIGITAL PASS
+
+        if (extraNode) {
+            bubble.appendChild(extraNode);
+        }
+
+        // BOOKING ERROR
+
+        if (errorNode) {
+            bubble.appendChild(errorNode);
+        }
+
+        // =================================
+        // TEXT TO SPEECH
+        // =================================
+
         if (role === "model" && "speechSynthesis" in window) {
             const textToRead = rawTextForTTS || content;
+
             const ttsHtml = `
-                <div class="ai-tts-wrapper">
-                    <select class="tts-speed" title="Playback Speed">
-                        <option value="1">1x</option>
-                        <option value="1.25">1.25x</option>
-                        <option value="1.5">1.5x</option>
-                    </select>
-                    <button class="tts-btn tts-play-btn" data-text="${encodeURIComponent(textToRead)}" aria-label="Play response" title="Listen">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
-                    </button>
-                    <button class="tts-btn tts-stop-btn" style="display:none;" aria-label="Stop playback" title="Stop">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="6" width="12" height="12"></rect></svg>
-                    </button>
-                </div>
-            `;
+
+            <div class="ai-tts-wrapper">
+
+                <select
+                    class="tts-speed"
+                    title="Playback Speed"
+                >
+
+                    <option value="1">1x</option>
+
+                    <option value="1.25">1.25x</option>
+
+                    <option value="1.5">1.5x</option>
+
+                </select>
+
+
+                <button
+                    class="tts-btn tts-play-btn"
+                    data-text="${encodeURIComponent(textToRead)}"
+                    aria-label="Play response"
+                    title="Listen"
+                >
+
+                    <svg
+                        width="14"
+                        height="14"
+                        viewBox="0 0 24 24"
+                        fill="currentColor"
+                    >
+
+                        <polygon
+                            points="5 3 19 12 5 21 5 3"
+                        ></polygon>
+
+                    </svg>
+
+                </button>
+
+
+                <button
+                    class="tts-btn tts-stop-btn"
+                    style="display:none;"
+                    aria-label="Stop playback"
+                    title="Stop"
+                >
+
+                    <svg
+                        width="14"
+                        height="14"
+                        viewBox="0 0 24 24"
+                        fill="currentColor"
+                    >
+
+                        <rect
+                            x="6"
+                            y="6"
+                            width="12"
+                            height="12"
+                        ></rect>
+
+                    </svg>
+
+                </button>
+
+            </div>
+
+        `;
+
             bubble.insertAdjacentHTML("beforeend", ttsHtml);
         }
 
+        // =================================
+        // ADD MESSAGE TO CHAT
+        // =================================
+
         msgRow.appendChild(bubble);
+
         aiMessages.appendChild(msgRow);
 
         setTimeout(() => {
@@ -712,29 +964,63 @@ document.addEventListener("DOMContentLoaded", () => {
         }, 10);
     }
 
+    // ==========================================
+    // LOADING INDICATOR
+    // ==========================================
+
     function appendLoading() {
         if (!aiMessages) return null;
+
         const id = "loading-" + Date.now();
+
         const msgRow = document.createElement("div");
+
         msgRow.className = "ember-ai-message ember-ai-message-model";
+
         msgRow.id = id;
+
         msgRow.innerHTML = `
-            <div class="ember-ai-bubble" style="padding: 0.6rem 1rem;">
-                <div class="typing-indicator">
-                    <div class="typing-dot"></div>
-                    <div class="typing-dot"></div>
-                    <div class="typing-dot"></div>
-                </div>
+
+        <div
+            class="ember-ai-bubble"
+            style="padding: 0.6rem 1rem;"
+        >
+
+            <div class="typing-indicator">
+
+                <div class="typing-dot"></div>
+
+                <div class="typing-dot"></div>
+
+                <div class="typing-dot"></div>
+
             </div>
-        `;
+
+        </div>
+
+    `;
+
         aiMessages.appendChild(msgRow);
-        setTimeout(() => (aiMessages.scrollTop = aiMessages.scrollHeight), 10);
+
+        setTimeout(() => {
+            aiMessages.scrollTop = aiMessages.scrollHeight;
+        }, 10);
+
         return id;
     }
 
+    // ==========================================
+    // REMOVE MESSAGE
+    // ==========================================
+
     function removeMessage(id) {
-        const el = document.getElementById(id);
-        if (el) el.remove();
+        if (!id) return;
+
+        const element = document.getElementById(id);
+
+        if (element) {
+            element.remove();
+        }
     }
 
     // ==========================================

@@ -518,53 +518,24 @@ document.addEventListener("DOMContentLoaded", () => {
 
         updateSummary();
     });
-    // ==================================
-    // SUMMARY
-    // ==================================
+// ==================================
+// SUMMARY — DIGITAL PASS ONLY
+// ==================================
 
-    function updateSummary() {
-        const visible = !finalSection.hidden;
+function updateSummary() {
 
-        if (!visible) return;
+    // Once booking is confirmed,
+    // never overwrite the digital pass.
 
-        summary.replaceChildren();
-
-        const values = [
-            ["Guest", $("name").value],
-            ["Email", $("email").value],
-            ["Branch", branch.value],
-            ["Date", date.value],
-            ["Time", time.value],
-            ["Guests", $("guests").value],
-            ["Dining Room", room.value],
-            ["Arrival", vehicle || "Not selected"],
-        ];
-
-        if (parkingRequired) {
-            values.push(
-                ["Parking", allocation || "Not selected"],
-                [
-                    "Slot",
-                    selectedSlot ? selectedSlot.id : "Automatic allocation",
-                ],
-            );
-        } else {
-            values.push(["Parking", "Not requested"]);
-        }
-
-        const heading = document.createElement("h4");
-        heading.textContent = "EMBER Booking Summary";
-
-        summary.appendChild(heading);
-
-        values.forEach(([label, value]) => {
-            const p = document.createElement("p");
-
-            p.textContent = `${label}: ${value || "Not selected"}`;
-
-            summary.appendChild(p);
-        });
+    if (confirmedBooking) {
+        return;
     }
+
+    // No text-based booking summary.
+    // The confirmation section is reserved
+    // exclusively for the digital pass.
+
+}
 
     // ==================================
     // FORM VALIDATION
@@ -663,62 +634,108 @@ document.addEventListener("DOMContentLoaded", () => {
                 body: JSON.stringify(payload),
             });
 
-            confirmedBooking = result;
+            // ============================================
+// EMBER DIGITAL RESERVATION CONFIRMATION
+// ============================================
 
-            finalSection.hidden = false;
+// Validate backend response.
 
-            summary.replaceChildren();
+if (
+    !result ||
+    !result.booking_id ||
+    !result.reservation
+) {
 
-            const heading = document.createElement("h4");
-            heading.textContent = "Reservation Confirmed";
+    throw new Error(
+        "The booking server did not return a valid confirmation."
+    );
 
-            summary.appendChild(heading);
+}
 
-            const details = [
-                ["Booking ID", result.booking_id],
-                ["Guest", result.reservation.name],
-                ["Date", result.reservation.date],
-                ["Time", result.reservation.time],
-                ["Guests", result.reservation.guests],
-                ["Dining Room", result.reservation.room],
-            ];
 
-            if (result.parking) {
-                details.push(
-                    ["Vehicle", result.parking.vehicle_type],
-                    ["Parking Slot", result.parking.slot_id],
-                    ["Distance", result.parking.distance + " metres"],
-                    ["Parking Status", result.parking.status],
-                );
-            } else {
-                details.push(["Parking", "Not requested"]);
-            }
+// Save confirmed booking.
 
-            details.forEach(([label, value]) => {
-                const p = document.createElement("p");
-                p.textContent = `${label}: ${value}`;
-                summary.appendChild(p);
-            });
+confirmedBooking = result;
+
+
+// ============================================
+// SHOW DIGITAL PASS
+// ============================================
+
+finalSection.hidden = false;
+
+
+// Remove any previous content.
+
+summary.replaceChildren();
+
+
+if (window.EmberDigitalPass) {
+
+    // Generate the actual digital pass.
+
+    window.EmberDigitalPass.showOnReservationPage(
+        result
+    );
+
+} else {
+
+    const message = document.createElement("p");
+
+    message.textContent =
+        `Booking ${result.booking_id} is confirmed, but the digital pass module did not load.`;
+
+    summary.appendChild(message);
+
+}
+
+
+// ============================================
+// SUCCESS MESSAGE
+// ============================================
+
+feedback.textContent =
+    "Your EMBER reservation has been confirmed successfully.";
+
+feedback.className =
+    "booking-feedback success";
+
+
+// ============================================
+// LOCK SUBMISSION
+// ============================================
+
+submitButton.disabled = true;
+
+submitButton.textContent =
+    "RESERVATION CONFIRMED";
+
+
+// Disable parking controls.
+
+parkingSection.querySelectorAll("button").forEach((button) => {
+
+    button.disabled = true;
+
+});        } catch (error) {
+
+            console.error("EMBER booking error:", error);
 
             feedback.textContent =
-                "Your EMBER reservation has been confirmed successfully.";
-
-            feedback.className = "booking-feedback success";
-
-            submitButton.textContent = "RESERVATION CONFIRMED";
-
-            parkingSection.querySelectorAll("button").forEach((button) => {
-                button.disabled = true;
-            });
-        } catch (error) {
-            feedback.textContent = error.message;
+                error.message || "Reservation could not be completed.";
 
             feedback.className = "booking-feedback error";
 
             submitButton.disabled = false;
+
             submitButton.textContent = "CONFIRM RESERVATION";
+
         } finally {
+
             submitting = false;
+
         }
+
     });
+
 });
