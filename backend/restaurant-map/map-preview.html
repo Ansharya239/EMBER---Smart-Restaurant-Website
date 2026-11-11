@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+        <meta
+            name="description"
+            content="Explore the EMBER map and nearby areas."
+        />
+
+        <title>EMBER | Explore Map</title>
+
+        <!-- LEAFLET CSS -->
+
+        <link
+            rel="stylesheet"
+            href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        />
+
+        <!-- CUSTOM CSS -->
+
+        <link rel="stylesheet" href="map.css" />
+    </head>
+
+    <body>
+        <!-- HEADER -->
+
+        <header class="map-header">
+            <a class="brand" href="../index.html" aria-label="EMBER home">
+                E M B E R
+            </a>
+
+            <nav class="header-nav">
+                <a href="../index.html">Home</a>
+
+                <a href="../reservation.html" class="reserve-link"> Reserve </a>
+            </nav>
+        </header>
+
+        <main class="map-container">
+            <!-- HEADING -->
+
+            <section class="map-intro">
+                <p class="eyebrow">EMBER • NEW DELHI</p>
+
+                <h1>Explore <em>your surroundings.</em></h1>
+
+                <p>
+                    Search for an area or landmark, or use your current
+                    location.
+                </p>
+            </section>
+
+            <!-- SEARCH PANEL -->
+
+            <section class="search-panel" aria-label="Search map locations">
+                <form id="place-search" class="search-form">
+                    <span class="search-icon" aria-hidden="true"> ⌕ </span>
+
+                    <input
+                        id="place-query"
+                        type="search"
+                        placeholder="Search a place, area or landmark..."
+                        autocomplete="off"
+                        aria-label="Search a place, area or landmark"
+                        required
+                    />
+
+                    <button type="submit" class="search-button">Explore</button>
+                </form>
+
+                <!-- SEARCH RECOMMENDATIONS -->
+
+                <div class="suggestion-row" aria-label="Suggested locations">
+                    <span class="suggestion-label"> Popular: </span>
+
+                    <button
+                        type="button"
+                        class="suggestion-chip chip-gold"
+                        data-place="Connaught Place"
+                    >
+                        Connaught Place
+                    </button>
+
+                    <button
+                        type="button"
+                        class="suggestion-chip chip-blue"
+                        data-place="India Gate"
+                    >
+                        India Gate
+                    </button>
+
+                    <button
+                        type="button"
+                        class="suggestion-chip chip-green"
+                        data-place="Hauz Khas"
+                    >
+                        Hauz Khas
+                    </button>
+
+                    <button
+                        type="button"
+                        class="suggestion-chip chip-purple"
+                        data-place="Cyber Hub, Gurugram"
+                    >
+                        Cyber Hub
+                    </button>
+                </div>
+            </section>
+
+            <!-- MAP TOOLBAR -->
+
+            <section class="map-toolbar">
+                <p id="map-status" role="status" aria-live="polite">
+                    Loading map and sample pins...
+                </p>
+
+                <button id="locate-button" type="button">
+                    ◎ &nbsp; Locate Me
+                </button>
+            </section>
+
+            <!-- MAP -->
+
+            <section class="map-card" aria-label="Interactive map">
+                <div
+                    id="ember-map"
+                    aria-label="Map showing demonstration restaurant pins"
+                ></div>
+            </section>
+
+            <!-- ERROR MESSAGE -->
+
+            <p id="map-error" role="alert" aria-live="assertive"></p>
+        </main>
+        <!-- EMBER PREMIUM FOOTER -->
+
+        <footer class="ember-footer">
+            <div class="footer-main">
+                <div class="footer-brand">
+                    <h2>E M B E R</h2>
+                    <span>THE ART OF FINE DINING</span>
+                </div>
+
+                <div class="footer-message">
+                    <h3>Thoughtful dining. Memorable evenings.</h3>
+
+                    <p>
+                        Discover exceptional places, explore new flavours and
+                        make every gathering worth remembering.
+                    </p>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <span>© 2026 EMBER. All rights reserved.</span>
+
+                <span>CRAFTED FOR THE LOVE OF DINING.</span>
+            </div>
+        </footer>
+
+        <!-- LEAFLET JS -->
+
+        <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+        <!-- CUSTOM JS -->
+
+        <script src="map.js"></script>
+    </body>
+</html>

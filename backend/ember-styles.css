@@ -2166,3 +2166,19 @@ button {
     letter-spacing: 2px;
     font-weight: 600;
 }
+/* MAP NAVIGATION RESPONSIVENESS */
+
+@media (min-width: 769px) and (max-width: 1100px) {
+    .site-nav {
+        gap: 1rem;
+    }
+
+    .site-nav a {
+        font-size: 0.68rem;
+        letter-spacing: 0.08em;
+    }
+
+    .header-actions .btn {
+        display: none;
+    }
+}

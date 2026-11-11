@@ -1,0 +1,503 @@
+/* =========================================================
+   EMBER DIGITAL RESERVATION PASS
+   Shared by AI chat and reservation confirmation page.
+   ========================================================= */
+
+/* MAIN CARD */
+
+.ember-digital-pass {
+    width: 100%;
+
+    max-width: 760px;
+
+    margin: 14px 0;
+
+    padding: 20px;
+
+    overflow: hidden;
+
+    color: #f4efe5;
+
+    background: linear-gradient(145deg, #22221f 0%, #171817 58%, #111312 100%);
+
+    border: 1px solid rgba(207, 164, 96, 0.72);
+
+    border-radius: 15px;
+
+    box-shadow: 0 14px 36px rgba(0, 0, 0, 0.25);
+
+    box-sizing: border-box;
+}
+
+.ember-digital-pass *,
+.ember-digital-pass *::before,
+.ember-digital-pass *::after {
+    box-sizing: border-box;
+}
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+.ember-pass-header {
+    display: flex;
+
+    align-items: center;
+
+    gap: 13px;
+
+    padding: 0 0 16px;
+
+    border-bottom: 1px dashed rgba(207, 164, 96, 0.52);
+}
+
+.ember-pass-check {
+    display: grid;
+
+    width: 38px;
+
+    height: 38px;
+
+    flex: 0 0 38px;
+
+    place-items: center;
+
+    color: #102015;
+
+    background: #a8d0a0;
+
+    border-radius: 50%;
+
+    font-size: 21px;
+
+    font-weight: 800;
+}
+
+.ember-pass-header-copy {
+    min-width: 0;
+}
+
+.ember-pass-kicker {
+    display: block;
+
+    color: #d7ae70;
+
+    font-size: 9px;
+
+    font-weight: 800;
+
+    letter-spacing: 2px;
+}
+
+.ember-pass-title {
+    margin: 4px 0 3px;
+
+    color: #f2dfbf;
+
+    font-family: Georgia, "Times New Roman", serif;
+
+    font-size: 22px;
+
+    font-weight: 500;
+
+    line-height: 1.2;
+}
+
+.ember-pass-id {
+    margin: 0;
+
+    color: #b9b0a2;
+
+    font-size: 11px;
+
+    line-height: 1.45;
+
+    overflow-wrap: anywhere;
+}
+
+/* =========================================================
+   DETAILS AND QR LAYOUT
+   ========================================================= */
+
+.ember-pass-body {
+    display: grid;
+
+    grid-template-columns: minmax(0, 1fr) 194px;
+
+    align-items: center;
+
+    gap: 18px;
+
+    padding: 18px 0;
+}
+
+.ember-pass-grid {
+    display: grid;
+
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+
+    gap: 15px 18px;
+
+    min-width: 0;
+}
+
+.ember-pass-detail {
+    display: flex;
+
+    min-width: 0;
+
+    flex-direction: column;
+
+    gap: 5px;
+}
+
+.ember-pass-detail-wide {
+    grid-column: 1 / -1;
+}
+
+.ember-pass-label {
+    color: #a99e8d;
+
+    font-size: 9px;
+
+    font-weight: 800;
+
+    letter-spacing: 1.15px;
+
+    line-height: 1.3;
+
+    text-transform: uppercase;
+}
+
+.ember-pass-value {
+    color: #f3ede2;
+
+    font-size: 12px;
+
+    font-weight: 600;
+
+    line-height: 1.5;
+
+    overflow-wrap: anywhere;
+}
+
+/* =========================================================
+   QR PANEL
+   ========================================================= */
+
+.ember-pass-qr-panel {
+    display: flex;
+
+    align-items: center;
+
+    flex-direction: column;
+
+    gap: 8px;
+
+    width: 194px;
+
+    padding: 10px;
+
+    background: #f7f6f1;
+
+    border-radius: 10px;
+
+    text-align: center;
+}
+
+.ember-pass-qr {
+    display: grid;
+
+    width: 176px;
+
+    height: 176px;
+
+    place-items: center;
+
+    overflow: hidden;
+
+    background: #ffffff;
+}
+
+.ember-pass-qr img,
+.ember-pass-qr canvas {
+    display: block;
+
+    width: 176px !important;
+
+    height: 176px !important;
+
+    max-width: 100%;
+
+    max-height: 100%;
+
+    image-rendering: pixelated;
+}
+
+.ember-pass-qr-caption {
+    color: #28251f;
+
+    font-size: 10px;
+
+    font-weight: 800;
+
+    letter-spacing: 1.5px;
+}
+
+.ember-pass-qr-note {
+    color: #68645d;
+
+    font-size: 8px;
+
+    line-height: 1.4;
+}
+
+.ember-pass-qr-error {
+    display: block;
+
+    padding: 12px;
+
+    color: #6a2828;
+
+    font-size: 10px;
+
+    line-height: 1.45;
+}
+
+/* =========================================================
+   FOOTER
+   ========================================================= */
+
+.ember-pass-footer {
+    padding-top: 13px;
+
+    border-top: 1px solid rgba(255, 255, 255, 0.11);
+
+    color: #d8b77f;
+
+    font-size: 10px;
+
+    line-height: 1.55;
+
+    text-align: center;
+}
+
+/* =========================================================
+   BOOKING FAILURE MESSAGE
+   ========================================================= */
+
+.ember-pass-error {
+    margin-top: 11px;
+
+    padding: 11px 13px;
+
+    color: #ffd3cb;
+
+    background: rgba(137, 45, 35, 0.22);
+
+    border: 1px solid rgba(225, 105, 88, 0.45);
+
+    border-radius: 8px;
+
+    font-size: 12px;
+
+    line-height: 1.55;
+
+    overflow-wrap: anywhere;
+}
+
+/* =========================================================
+   RESPONSIVE DESIGN
+   ========================================================= */
+
+@media (max-width: 600px) {
+    .ember-digital-pass {
+        padding: 15px;
+
+        border-radius: 12px;
+    }
+
+    .ember-pass-title {
+        font-size: 19px;
+    }
+
+    .ember-pass-body {
+        grid-template-columns: minmax(0, 1fr);
+
+        gap: 19px;
+    }
+
+    .ember-pass-grid {
+        gap: 13px 12px;
+    }
+
+    .ember-pass-qr-panel {
+        width: fit-content;
+
+        max-width: 100%;
+
+        justify-self: center;
+    }
+}
+
+/* =========================================================
+   PRINT SUPPORT
+   ========================================================= */
+
+@media print {
+    .ember-digital-pass {
+        max-width: 100%;
+
+        color: #111;
+
+        background: #ffffff;
+
+        border: 1px solid #999;
+
+        box-shadow: none;
+
+        break-inside: avoid;
+    }
+
+    .ember-pass-title,
+    .ember-pass-value {
+        color: #111;
+    }
+
+    .ember-pass-label,
+    .ember-pass-id {
+        color: #444;
+    }
+}
+/* =========================================
+   OPEN DIGITAL PASS BUTTON
+========================================= */
+
+.ember-pass-actions {
+    display: flex;
+
+    justify-content: center;
+
+    margin-top: 14px;
+}
+
+.ember-pass-open-button {
+    min-height: 43px;
+
+    padding: 0 22px;
+
+    border: 1px solid rgba(217, 174, 111, 0.8);
+
+    border-radius: 7px;
+
+    background: linear-gradient(135deg, #efc987, #c88b3c);
+
+    color: #21180d;
+
+    font-size: 11px;
+
+    font-weight: 800;
+
+    letter-spacing: 0.8px;
+
+    cursor: pointer;
+
+    transition:
+        filter 160ms ease,
+        transform 160ms ease;
+}
+
+.ember-pass-open-button:hover {
+    filter: brightness(1.07);
+
+    transform: translateY(-1px);
+}
+
+.ember-pass-open-button.is-blocked {
+    background: #5b4630;
+
+    color: #fff1d9;
+}
+
+@media print {
+    .ember-pass-actions {
+        display: none !important;
+    }
+}
+/* ============================================
+   EMBER DIGITAL PASS — AI CHAT LAYOUT FIX
+============================================ */
+
+.ember-ai-bubble .ember-digital-pass {
+    width: 100%;
+
+    max-width: 100%;
+
+    margin: 12px 0;
+
+    padding: 14px;
+
+    overflow: hidden;
+}
+
+/* Stack details and QR vertically inside AI chat */
+
+.ember-ai-bubble .ember-pass-body {
+    grid-template-columns: minmax(0, 1fr);
+
+    gap: 18px;
+}
+
+/* Keep booking details properly aligned */
+
+.ember-ai-bubble .ember-pass-grid {
+    display: grid;
+
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+
+    gap: 13px 12px;
+
+    width: 100%;
+}
+
+/* Centre QR code */
+
+.ember-ai-bubble .ember-pass-qr-panel {
+    width: 194px;
+
+    max-width: 100%;
+
+    justify-self: center;
+}
+
+/* Better typography in chatbot */
+
+.ember-ai-bubble .ember-pass-title {
+    font-size: 19px;
+
+    line-height: 1.3;
+}
+
+.ember-ai-bubble .ember-pass-value {
+    font-size: 12px;
+
+    overflow-wrap: anywhere;
+}
+
+/* Full-width open-pass button */
+
+.ember-ai-bubble .ember-pass-actions {
+    width: 100%;
+}
+
+.ember-ai-bubble .ember-pass-open-button {
+    width: 100%;
+}
+
+/* Very narrow chat screens */
+
+@media (max-width: 400px) {
+    .ember-ai-bubble .ember-pass-grid {
+        grid-template-columns: 1fr;
+    }
+}
